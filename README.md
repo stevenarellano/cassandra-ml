@@ -1,48 +1,63 @@
 # official cassandra here
+
 https://github.com/apache/cassandra
 
+# to run (mac)
 
-# important to run before running db (versioning)
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-
-
-# run the db
-bin/cassandra -f
-
+1. cd cassandra-ml/apache-cassandra-4.1.3/bin
+2. export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+3. sudo ifconfig lo0 alias 127.0.0.2 (if needed)
+4. ./cassandra -f
 
 # run cql
-bin/cqlsh
 
+1. cd cassandra-ml/apache-cassandra-4.1.3/bin
+2. ./cqlsh
 
 # random useful commands
 
 - while in bin
-./nodetool -h localhost -p 7199 status
-./nodetool status
-
+  ./nodetool -h localhost -p 7199 status
+  ./nodetool status
 
 - find a process on a port & kill
-Find: 
-sudo lsof -i :<PORT>
-Kill: 
-kill -9 <PID>
+  Find:
+  sudo lsof -i :<PORT>
+  Kill:
+  kill -9 <PID>
 
 ### setting up a new node (local on same machine)
+
 change the following
 
-For each cassandra.yaml
-data_file_directories: add /cassandra(x)/ to path
-commitlog_directory: add /cassandra(x)/ to path
-saved_caches_directory: add /cassandra(x)/ to path
-listen_address: 127.0.0.x
-rpc_address: 127.0.0.x
+- For each cassandra.yaml in conf(x)
 
+        * data_file_directories: add /cassandra(x)/ to path
+        * commitlog_directory: add /cassandra(x)/ to path
+        * saved_caches_directory: add /cassandra(x)/ to path
+        * listen_address: 127.0.0.x
+        * rpc_address: 127.0.0.x
 
-For each Cassandra-env.sh
-JMX port: change to unique port #
+- For each Cassandra-env.sh in conf(x)
 
-Make X copies of cassandra.in.sh and cassadra in the bin folder
-1. Change the path to conf in cassandra.in.sh
+  - JMX port: change to unique port #
+
+- Make X copies of cassandra.in.sh and cassadra in the bin folder
+
+for each cassandra.in.sh \* Change the path to conf in cassandra.in.sh
 
 Run
-sudo ifconfig lo0 alias 127.0.0.2
+_ sudo ifconfig lo0 alias 127.0.0.x
+_ e.g. sudo ifconfig lo0 alias 127.0.0.2 \* e.g. sudo ifconfig lo0 alias 127.0.0.3
+
+# running the benchmark
+
+1. latte schema <workload.rn> [<node address>] # create the database schema
+2. latte load <workload.rn> [<node address>] # populate the database with data
+3. latte run <workload.rn> [-f <function>] [<node address>] # execute the workload and measure the performance
+
+# current partitioners
+
+- Murmur3Partitioner (default): uniformly distributes data across the cluster based on MurmurHash hash values.
+- RandomPartitioner: uniformly distributes data across the cluster based on MD5 hash values.
+- ByteOrderedPartitioner: keeps an ordered distribution of data lexically by key bytes
