@@ -1,5 +1,9 @@
 .gitignore
 
+# 
+../$CASSANDRA_HOME/*
+
+
 # C*
 build
 build/

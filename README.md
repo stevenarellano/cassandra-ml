@@ -2,6 +2,10 @@
 
 https://github.com/apache/cassandra
 
+# to build
+
+ant -Drat.skip=true
+
 # to run (mac)
 
 1. cd cassandra-ml/apache-cassandra-4.1.3/bin
