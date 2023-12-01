@@ -37,8 +37,24 @@ change the following
 - For each cassandra.yaml in conf(x)
 
         * data_file_directories: add /cassandra(x)/ to path
+
+```
+data_file_directories:
+    - $CASSANDRA_HOME/cassandra/data
+```
+
         * commitlog_directory: add /cassandra(x)/ to path
+
+```
+commitlog_directory: $CASSANDRA_HOME/cassandra/commitlog
+```
+
         * saved_caches_directory: add /cassandra(x)/ to path
+
+```
+saved_caches_directory: $CASSANDRA_HOME/cassandra/saved_caches
+```
+
         * listen_address: 127.0.0.x
         * rpc_address: 127.0.0.x
 
