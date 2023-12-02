@@ -42,6 +42,8 @@ import org.apache.cassandra.utils.ObjectSizes;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Longs;
 
+import net.jpountz.xxhash.XXHashFactory;
+
 /**
  * This class generates a BigIntegerToken using a Murmur3 hash.
  */
@@ -271,6 +273,35 @@ public class Murmur3Partitioner implements IPartitioner
         return MAXIMUM_TOKEN_SIZE;
     }
 
+    private static final XXHashFactory factory = XXHashFactory.fastestInstance();
+
+    /**
+     * Generates a hash using the XXHash algorithm.
+     * This method generates two different hash values for the given ByteBuffer.
+     * @param key The ByteBuffer containing the data to hash.
+     * @return A long array containing the two hash values.
+     */
+    private long[] getXXHash(ByteBuffer key) {
+        long[] hash = new long[2];
+        int seed1 = 0; // Seed for the first hash
+        int seed2 = 1; // Different seed for the second hash
+
+        if (key.remaining() > 0) {
+            // Generate the first hash using seed1
+            hash[0] = factory.hash64().hash(key, key.position(), key.remaining(), seed1);
+            // Reset the position of ByteBuffer to generate second hash
+            key.position(0);
+            // Generate the second hash using seed2
+            hash[1] = factory.hash64().hash(key, key.position(), key.remaining(), seed2);
+        } else {
+            // If the key is empty, define constant hash values
+            hash[0] = 12345L; // Example constant value for the first hash
+            hash[1] = 67890L; // Example constant value for the second hash
+        }
+
+        return hash;
+    }
+
     public long[] generateConstantHash() {
         long[] hash = new long[2];
         hash[0] = 12345L;
@@ -281,8 +312,9 @@ public class Murmur3Partitioner implements IPartitioner
     private long[] getHash(ByteBuffer key)
     {
         long[] hash = new long[2];
-        MurmurHash.hash3_x64_128(key, key.position(), key.remaining(), 0, hash);
+        // MurmurHash.hash3_x64_128(key, key.position(), key.remaining(), 0, hash);
         // long[] hash = generateConstantHash();
+        hash = getXXHash(key);
         // System.out.println("Hash Value: " + hash); // Add this line to print the hash value
         return hash;
     }

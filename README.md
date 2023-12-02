@@ -2,6 +2,11 @@
 
 https://github.com/apache/cassandra
 
+# running on mac (use homebrew)
+
+brew install openjdk@11
+export JAVA_HOME=/usr/local/opt/openjdk@11
+
 # to build
 
 ant -Drat.skip=true
