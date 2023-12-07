@@ -20,7 +20,7 @@ fi
 
 # The directory where Cassandra's configs live (required)
 if [ "x$CASSANDRA_CONF" = "x" ]; then
-    CASSANDRA_CONF="$CASSANDRA_HOME/conf3"
+    CASSANDRA_CONF="$CASSANDRA_HOME/conf5"
 fi
 
 # The java classpath (required)
