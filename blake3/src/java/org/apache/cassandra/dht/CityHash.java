@@ -5,9 +5,6 @@ import java.util.*;
 /**
  * CityHash is a hash function for strings. This class provides various methods for hashing
  * byte arrays and generating hash codes. It is based on the CityHash algorithm.
- *
- * @see <a href="http://google-opensource.blogspot.jp/2011/04/introducing-cityhash.html">CityHash Blog</a>
- * @see <a href="http://code.google.com/p/cityhash/">CityHash Project</a>
  */
 public class CityHash {
 

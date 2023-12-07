@@ -325,7 +325,7 @@ credentials_validity: 2000ms
 # OrderPreservingPartitioner have been included for backward compatibility only.
 # For new clusters, you should NOT change this value.
 #
-partitioner: org.apache.cassandra.dht.CityHashPartitioner
+partitioner: org.apache.cassandra.dht.Blake3Partitioner
 
 
 # Directories where Cassandra should store data on disk. If multiple
