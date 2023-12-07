@@ -86,3 +86,18 @@ _ e.g. sudo ifconfig lo0 alias 127.0.0.2 \* e.g. sudo ifconfig lo0 alias 127.0.0
 - Murmur3Partitioner (default): uniformly distributes data across the cluster based on MurmurHash hash values.
 - RandomPartitioner: uniformly distributes data across the cluster based on MD5 hash values.
 - ByteOrderedPartitioner: keeps an ordered distribution of data lexically by key bytes
+
+
+# cool
+pkill -f 'java.*cassandra'
+
+# reset all data
+
+for each node
+sudo rm -rf bin/$CASSANDRA_HOME
+
+what this is doing:
+sudo rm -rf /var/lib/cassandra/data/*
+sudo rm -rf /var/lib/cassandra/commitlog/*
+sudo rm -rf /var/lib/cassandra/saved_caches/*
+
