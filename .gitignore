@@ -1,7 +1,7 @@
 .gitignore
 
 # 
-../$CASSANDRA_HOME/*
+**/$CASSANDRA_HOME/**/*
 
 
 # C*
