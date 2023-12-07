@@ -7,7 +7,7 @@ import subprocess
 # Configuration
 keyspace = 'benchmark_keyspace'
 table = 'benchmark_table'
-num_operations = 25000  # Number of read/write operations
+num_operations = 10000  # Number of read/write operations
 monitoring_interval = 250  # Monitoring interval
 output_file = 'node_distribution_over_time.csv'
 seed_value = 12345  # Seed value for reproducibility

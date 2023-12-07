@@ -77,9 +77,11 @@ _ e.g. sudo ifconfig lo0 alias 127.0.0.2 \* e.g. sudo ifconfig lo0 alias 127.0.0
 
 # running the benchmark
 
+0. CLEAR DATABASE; MAKE SURE DATABASE IS RUNNING LOCALLY; RUN THE BELOW; WORKLOAD FILES ARE LOCATED AT /latte/workloads/*.rn
+
 1. latte schema <workload.rn> [<node address>] # create the database schema
 2. latte load <workload.rn> [<node address>] # populate the database with data
-3. latte run <workload.rn> [-f <function>] [<node address>] # execute the workload and measure the performance
+3. latte run <workload.rn> [-f <function>] [<node address>] # execute the workload and measure the performance  # YOU DON"T NEED TO DO THE ADDRESS (default is localhost)
 
 # current partitioners
 
