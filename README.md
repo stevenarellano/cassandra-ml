@@ -1,105 +1,40 @@
-# official cassandra here
+# Fork of Cassandra-DB
 
-https://github.com/apache/cassandra
+### What
 
-# running on mac (use homebrew)
+- implmented the folloiwng 3 new paritioning algorithms for Cassandra-DB
 
-brew install openjdk@11
-export JAVA_HOME=/usr/local/opt/openjdk@11
+1. XXHash
+2. CityHash
+3. Blake3
 
-# to build
+### Methodology
 
-ant -Drat.skip=true
+Partitioner Implementation: Custom partitioner classes for XXHash, CityHash, and Blake3 were created and integrated into a cloned Cassandra environment.
+Benchmarking Setup: The experiment was conducted on both local and cloud (AWS EC2 instances) setups, allowing for comprehensive testing conditions.
 
-# to run (mac)
+### Evaluation Metrics
 
-1. cd cassandra-ml/apache-cassandra-4.1.3/bin
-2. export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-3. sudo ifconfig lo0 alias 127.0.0.2 (if needed)
-4. ./cassandra -f
+Collision Resistance: Measured by the number of key collisions per 1 million keys.
+Node Distribution: Assessed by the percentage of data distribution across nodes, particularly focusing on hotspot reduction.
+Performance/Latency: Evaluated through read/write operation timings and overall system throughput.
 
-# run cql
+### Results
 
-1. cd cassandra-ml/apache-cassandra-4.1.3/bin
-2. ./cqlsh
+#### Collision Resistance
 
-# random useful commands
+Murmur3: 144.64 collisions per 1M keys
+XXHash: 185.23 collisions per 1M keys
+CityHash: 44.88 collisions per 1M keys
 
-- while in bin
-  ./nodetool -h localhost -p 7199 status
-  ./nodetool status
+#### Load Distribution
 
-- find a process on a port & kill
-  Find:
-  sudo lsof -i :<PORT>
-  Kill:
-  kill -9 <PID>
+Murmur3: Hotspot ~47% at 25,000 operations
+XXHash: Hotspot ~50% at 25,000 operations
+CityHash: Hotspot ~36% at 25,000 operations
 
-### setting up a new node (local on same machine)
+#### Latency
 
-change the following
-
-- For each cassandra.yaml in conf(x)
-
-        * data_file_directories: add /cassandra(x)/ to path
-
-```
-data_file_directories:
-    - $CASSANDRA_HOME/cassandra/data
-```
-
-        * commitlog_directory: add /cassandra(x)/ to path
-
-```
-commitlog_directory: $CASSANDRA_HOME/cassandra/commitlog
-```
-
-        * saved_caches_directory: add /cassandra(x)/ to path
-
-```
-saved_caches_directory: $CASSANDRA_HOME/cassandra/saved_caches
-```
-
-        * listen_address: 127.0.0.x
-        * rpc_address: 127.0.0.x
-
-- For each Cassandra-env.sh in conf(x)
-
-  - JMX port: change to unique port #
-
-- Make X copies of cassandra.in.sh and cassadra in the bin folder
-
-for each cassandra.in.sh \* Change the path to conf in cassandra.in.sh
-
-Run
-_ sudo ifconfig lo0 alias 127.0.0.x
-_ e.g. sudo ifconfig lo0 alias 127.0.0.2 \* e.g. sudo ifconfig lo0 alias 127.0.0.3
-
-# running the benchmark
-
-0. CLEAR DATABASE; MAKE SURE DATABASE IS RUNNING LOCALLY; RUN THE BELOW; WORKLOAD FILES ARE LOCATED AT /latte/workloads/*.rn
-
-1. latte schema <workload.rn> [<node address>] # create the database schema
-2. latte load <workload.rn> [<node address>] # populate the database with data
-3. latte run <workload.rn> [-f <function>] [<node address>] # execute the workload and measure the performance  # YOU DON"T NEED TO DO THE ADDRESS (default is localhost)
-
-# current partitioners
-
-- Murmur3Partitioner (default): uniformly distributes data across the cluster based on MurmurHash hash values.
-- RandomPartitioner: uniformly distributes data across the cluster based on MD5 hash values.
-- ByteOrderedPartitioner: keeps an ordered distribution of data lexically by key bytes
-
-
-# cool
-pkill -f 'java.*cassandra'
-
-# reset all data
-
-for each node
-sudo rm -rf bin/$CASSANDRA_HOME
-
-what this is doing:
-sudo rm -rf /var/lib/cassandra/data/*
-sudo rm -rf /var/lib/cassandra/commitlog/*
-sudo rm -rf /var/lib/cassandra/saved_caches/*
-
+Murmur3: Write benchmark at 24,172 ops/sec with a mean response time of 5.065 ms; Read benchmark at 17,418 ops/sec with a mean response time of 7.079 ms.
+XXHash: Write benchmark at 7,775 ops/sec with a mean response time of 15.996 ms; Read benchmark at 5,317 ops/sec with a mean response time of 23.660 ms.
+CityHash: Write benchmark at 7,915 ops/sec with a mean response time of 15.635 ms; Read benchmark at 5,969 ops/sec with a mean response time of 21.051 ms.
